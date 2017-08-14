@@ -1,3 +1,3 @@
 # image_colors
 
-Detects the n most colors within an image.
+Detects the n most common colors within an image.
