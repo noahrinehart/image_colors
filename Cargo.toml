@@ -1,0 +1,8 @@
+[package]
+name = "image_colors"
+version = "0.1.0"
+authors = ["Noah Rinehart <rinehart.noah@gmail.com>"]
+
+[dependencies]
+image = "0.15.0"
+# ansi_term = "0.9.0"
