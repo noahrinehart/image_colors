@@ -1,6 +1,6 @@
 [package]
 name = "image_colors"
-version = "0.1.0"
+version = "0.1"
 authors = ["Noah Rinehart <rinehart.noah@gmail.com>"]
 
 [dependencies]
