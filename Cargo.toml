@@ -2,9 +2,17 @@
 name = "image_colors"
 version = "0.2.2"
 authors = ["Noah Rinehart <rinehart.noah@gmail.com>"]
+description = "Get colors from an image. Optionally sort by most common."
+homepage = "https://github.com/noahrinehart/image_colors"
+repository = "https://github.com/noahrinehart/image_colors"
+readme = "README.md"
+keywords = ["image", "colors", "pixels", "sorted"]
+license = "MIT"
+categories = ["multimedia", "command-line-utilities"]
 
 [lib]
 name = "image_colors"
+path = "src/lib.rs"
 
 [[bin]]
 name = "image_colors"
