@@ -8,6 +8,7 @@ extern crate image;
 extern crate ansi_term;
 use self::ansi_term::Color as AnsiColor;
 
+type ColorCounts = Vec<(PixelColor, usize)>;
 
 #[derive(Hash,Eq,PartialEq,Debug,Clone)]
 pub struct PixelColor {
@@ -26,7 +27,7 @@ impl fmt::UpperHex for PixelColor {
     }
 }
 
-pub fn fetch_colors(filename: &String, depth: usize) -> Vec<(PixelColor, usize)> {
+pub fn fetch_colors(filename: &String, depth: usize) -> ColorCounts {
 
     let img = image::open(&Path::new(filename)).unwrap();
     let raw_pixels = img.raw_pixels();
@@ -43,7 +44,7 @@ pub fn fetch_colors(filename: &String, depth: usize) -> Vec<(PixelColor, usize)>
     Vec::from_iter(pixel_map)
 }
 
-pub fn sort_colors(mut colors: Vec<(PixelColor, usize)>, num_colors: usize) -> Vec<(PixelColor, usize)> {
+pub fn sort_colors(mut colors: ColorCounts, num_colors: usize) -> ColorCounts {
     colors.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
     let pixels = if num_colors > colors.len() {
         colors.to_vec()
@@ -53,7 +54,7 @@ pub fn sort_colors(mut colors: Vec<(PixelColor, usize)>, num_colors: usize) -> V
     pixels
 }
 
-pub fn print_colors(colors: Vec<(PixelColor, usize)>, with_ansi_color: bool, mut delimiter: String, with_rgb: bool) {
+pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, mut delimiter: String, with_rgb: bool) {
     if delimiter.is_empty() {
         delimiter = " has a pixel count of: ".to_string();
     }
