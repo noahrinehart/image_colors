@@ -2,3 +2,5 @@
 **/*.rs.bk
 .idea
 tags
+.swp
+.swo

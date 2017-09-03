@@ -5,25 +5,18 @@ use std::iter::FromIterator;
 use std::fmt;
 
 extern crate image;
+extern crate ansi_term;
+use self::ansi_term::Color as AnsiColor;
 
-#[derive(Hash,Eq,PartialEq)]
-struct Color {
+
+#[derive(Hash,Eq,PartialEq,Debug,Clone)]
+pub struct PixelColor {
    r: u8,
    g: u8,
    b: u8,
 }
 
-impl Color {
-    pub fn convert_to_u32(&self) -> u32 {
-        let mut ret = 0;
-        ret = ret << 8 | self.r as u32;
-        ret = ret << 8 | self.g as u32;
-        ret = ret << 8 | self.b as u32;
-        ret
-    }
-}
-
-impl fmt::UpperHex for Color {
+impl fmt::UpperHex for PixelColor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut ret = 0;
         ret = ret << 8 | self.r as u32;
@@ -33,7 +26,7 @@ impl fmt::UpperHex for Color {
     }
 }
 
-pub fn fetch_colors(filename: &String, num_colors: usize) {
+pub fn fetch_colors(filename: &String, num_colors: usize) -> Vec<(PixelColor, usize)> {
 
     let img = image::open(&Path::new(filename)).unwrap();
     let raw_pixels = img.raw_pixels();
@@ -42,33 +35,34 @@ pub fn fetch_colors(filename: &String, num_colors: usize) {
 
     let mut i = 0;
     while i < raw_pixels_size {
-        let color = Color { r: raw_pixels[i], g: raw_pixels[i+1], b: raw_pixels[i+2] };
+        let color = PixelColor { r: raw_pixels[i], g: raw_pixels[i+1], b: raw_pixels[i+2] };
         *pixel_map.entry(color).or_insert(0) += 1;
         i += 3;
     }
 
     let mut sorted_pixels = Vec::from_iter(pixel_map);
     sorted_pixels.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
-
-
-    i = 0;
-    while i < num_colors {
-         match sorted_pixels.get(i) {
-            Some(&(color :Color, count)) => {
-                let num = color.convert_nibbles_to_u32();
-                println!("#{:X} - {} pixels", num, count);
-            },
-            None => break,
-        }
-        i += 1;
-    }
+    let pixels = if num_colors > sorted_pixels.len() {
+        sorted_pixels.to_vec()
+    } else {
+        sorted_pixels[0..num_colors].to_vec()
+    };
+    pixels
 }
 
-fn convert_nibbles_to_u32(values: &[u8]) -> u32{
-    let mut ret = 0;
-    for &i in values {
-        ret = ret << 8 | i as u32;
+pub fn print_colors(colors: Vec<(PixelColor, usize)>, with_ansi_color: bool, format: Option<String>) {
+    let delimit = match format {
+        Some(_) => format.unwrap(),
+        None => " has a pixel count of: ".to_string()
+    };
+
+    for (color, count) in colors {
+        if with_ansi_color {
+            let ansi_color = AnsiColor::RGB(color.r, color.g, color.b);
+            println!("{} #{:X}{}{}", ansi_color.paint("█"), color, delimit, count);
+        } else {
+            println!("#{:X}{}{}", color, delimit, count);
+        }
     }
-    ret
 }
 

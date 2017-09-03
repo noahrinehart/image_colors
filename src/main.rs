@@ -1,8 +1,6 @@
 
 use std::env;
 
-extern crate ansi_term;
-
 mod lib;
 
 fn main() {
@@ -13,7 +11,6 @@ fn main() {
     let filename = &args[1];
     let num_colors = args[2].parse::<usize>().expect("Expected an integer");
 
-    // lib::fetch_colors(filename, num_colors);
-    use ansi_term::Colour::Red;
-    println!("This is in red: {}", Red.paint("red"));
+    let pixels = lib::fetch_colors(filename, num_colors);
+    lib::print_colors(pixels, true, Some(", ".to_string()));
 }
