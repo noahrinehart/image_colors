@@ -1,4 +1,4 @@
-# image_colors
+# image_colors ![Badge](https://img.shields.io/crates/v/image_colors.svg)
 Get colors from an image. Optionally sort by most common.
 
 --------
