@@ -1,8 +1,21 @@
 [package]
 name = "image_colors"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Noah Rinehart <rinehart.noah@gmail.com>"]
+
+[lib]
+name = "image_colors"
+
+[[bin]]
+name = "image_colors"
+path = "src/main.rs"
 
 [dependencies]
 image = "0.15.0"
 ansi_term = "0.9.0"
+docopt = "0.8"
+docopt_macros = "0.8"
+serde = "1.0"
+serde_derive = "1.0"
+log = "0.3.8"
+env_logger = "0.4.3"

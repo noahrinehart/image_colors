@@ -26,7 +26,7 @@ impl fmt::UpperHex for PixelColor {
     }
 }
 
-pub fn fetch_colors(filename: &String, num_colors: usize) -> Vec<(PixelColor, usize)> {
+pub fn fetch_colors(filename: &String) -> Vec<(PixelColor, usize)> {
 
     let img = image::open(&Path::new(filename)).unwrap();
     let raw_pixels = img.raw_pixels();
@@ -40,28 +40,37 @@ pub fn fetch_colors(filename: &String, num_colors: usize) -> Vec<(PixelColor, us
         i += 3;
     }
 
-    let mut sorted_pixels = Vec::from_iter(pixel_map);
-    sorted_pixels.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
-    let pixels = if num_colors > sorted_pixels.len() {
-        sorted_pixels.to_vec()
+    Vec::from_iter(pixel_map)
+}
+
+pub fn sort_colors(mut colors: Vec<(PixelColor, usize)>, num_colors: usize) -> Vec<(PixelColor, usize)> {
+    colors.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
+    let pixels = if num_colors > colors.len() {
+        colors.to_vec()
     } else {
-        sorted_pixels[0..num_colors].to_vec()
+        colors[0..num_colors].to_vec()
     };
     pixels
 }
 
-pub fn print_colors(colors: Vec<(PixelColor, usize)>, with_ansi_color: bool, format: Option<String>) {
-    let delimit = match format {
-        Some(_) => format.unwrap(),
-        None => " has a pixel count of: ".to_string()
-    };
+pub fn print_colors(colors: Vec<(PixelColor, usize)>, with_ansi_color: bool, mut delimiter: String, with_rgb: bool) {
+    if delimiter.is_empty() {
+        delimiter = " has a pixel count of: ".to_string();
+    }
 
     for (color, count) in colors {
+
+        let display_color = if with_rgb {
+            format!("r:{} g:{} b:{}", color.r, color.g, color.b)
+        } else {
+           format!("#{:X}", color)
+        };
+
         if with_ansi_color {
             let ansi_color = AnsiColor::RGB(color.r, color.g, color.b);
-            println!("{} #{:X}{}{}", ansi_color.paint("█"), color, delimit, count);
+            println!("{} {}{}{}", ansi_color.paint("█"), display_color, delimiter, count);
         } else {
-            println!("#{:X}{}{}", color, delimit, count);
+            println!("{}{}{}", display_color, delimiter, count);
         }
     }
 }
