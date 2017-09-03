@@ -1,5 +1,5 @@
 # image_colors
-Detects the n most common colors within an image.
+Get colors from an image. Optionally sort by most common.
 
 --------
 ### Usage
