@@ -1,6 +1,6 @@
 [package]
 name = "image_colors"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Noah Rinehart <rinehart.noah@gmail.com>"]
 
 [lib]
