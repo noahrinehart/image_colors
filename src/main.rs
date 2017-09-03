@@ -1,3 +1,4 @@
+
 mod lib;
 
 #[macro_use]
@@ -23,7 +24,7 @@ Options:
     --version               Show version.
     -c, --colors            Show colors.
     -l, --delimiter DELIM   Delimiter between color and count [defaults: ' has a pixel count of: '].
-    -d, --depth DEPTH       Set depth of search (how many pixels iterated by) [default: 3].
+    -d, --depth DEPTH       Set depth of search (how many pixels iterated by) [default: 1].
     -r, --rgb               Display rgb instead of hex.
 ";
 
@@ -32,6 +33,7 @@ struct Args {
     flag_version: bool,
     flag_help: bool,
     flag_delimiter: String,
+    flag_depth: usize,
     flag_rgb: bool,
     flag_colors: bool,
     arg_path: String,
@@ -49,7 +51,7 @@ fn main() {
         return;
     }
 
-    let mut pixels = lib::fetch_colors(&args.arg_path);
+    let mut pixels = lib::fetch_colors(&args.arg_path, args.flag_depth);
     pixels = lib::sort_colors(pixels, args.arg_num_colors);
     lib::print_colors(pixels, args.flag_colors, args.flag_delimiter, args.flag_rgb);
 }

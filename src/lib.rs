@@ -26,7 +26,7 @@ impl fmt::UpperHex for PixelColor {
     }
 }
 
-pub fn fetch_colors(filename: &String) -> Vec<(PixelColor, usize)> {
+pub fn fetch_colors(filename: &String, depth: usize) -> Vec<(PixelColor, usize)> {
 
     let img = image::open(&Path::new(filename)).unwrap();
     let raw_pixels = img.raw_pixels();
@@ -34,10 +34,10 @@ pub fn fetch_colors(filename: &String) -> Vec<(PixelColor, usize)> {
     let mut pixel_map = HashMap::new();
 
     let mut i = 0;
-    while i < raw_pixels_size {
+    while i < raw_pixels_size - 3 {
         let color = PixelColor { r: raw_pixels[i], g: raw_pixels[i+1], b: raw_pixels[i+2] };
         *pixel_map.entry(color).or_insert(0) += 1;
-        i += 3;
+        i += depth * 3;
     }
 
     Vec::from_iter(pixel_map)
