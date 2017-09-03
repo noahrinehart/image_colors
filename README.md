@@ -4,19 +4,22 @@ Detects the n most common colors within an image.
 --------
 ### Usage
 ```bash
-./image_colors /path/to/picture <num_colors>
-```
-or
-```bash
-cargo run /path/to/picture <num_colors>
+Image Colors
+Get colors from an image. Optionally sort by most common.
+
+Usage:
+    ./image_colors [options] <path> <num-colors>
+    ./image_colors (-h | --help)
+    ./image_colors --version
+
+Options:
+    -h, --help              Show this screen.
+    --version               Show version.
+    -c, --colors            Show colors.
+    -l, --delimiter DELIM   Delimiter between color and count [defaults: ' has a pixel count of: '].
+    -d, --depth DEPTH       Set depth of search (how many pixels iterated by) [default: 1].
+    -r, --rgb               Display rgb instead of hex.
 ```
 
 ### Example
-```bash
-./image_colors /diamond.png 5
-#282C34 - 1901447 pixels
-#C678DD - 12002 pixels
-#51AFEF - 11158 pixels
-#A9A1E1 - 10638 pixels
-#292D35 - 5673 pixels
-```
+![Example pic](http://i.imgur.com/1slGf0R.png)
