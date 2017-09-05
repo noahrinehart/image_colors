@@ -38,11 +38,12 @@ impl fmt::UpperHex for PixelColor {
 ///
 /// # Example
 /// ```rust,no_run
-/// let colors: image_colors::ColorCounts = image_colors::fetch_colors("path/to/file.jpg", 5);
+/// # use std::path::Path;
+/// let _colors = image_colors::fetch_colors(&Path::new("path/to/file.jpg"), 5);
 /// ```
-pub fn fetch_colors(filename: &str, depth: usize) -> ColorCounts {
+pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
 
-    let img = image::open(&Path::new(filename)).unwrap();
+    let img = image::open(filepath).unwrap();
     let raw_pixels = img.raw_pixels();
     let raw_pixels_size = raw_pixels.len();
     let mut pixel_map = HashMap::new();
@@ -66,10 +67,11 @@ pub fn fetch_colors(filename: &str, depth: usize) -> ColorCounts {
 ///
 /// # Example
 /// ```rust,no_run
-/// let colors: image_colors::ColorCounts = image_colors::fetch_colors("path/to/file.jpg", 5);
-/// let sorted_colors = image_colors::sort_colors(colors, 5);
+/// # use std::path::Path;
+/// let _colors = image_colors::fetch_colors(&Path::new("path/to/file.jpg"), 5);
+/// let _sorted_colors = image_colors::sort_colors(&_colors, 5);
 /// ```
-pub fn sort_colors(colors: ColorCounts, num_colors: usize) -> ColorCounts {
+pub fn sort_colors(colors: &ColorCounts, num_colors: usize) -> ColorCounts {
     let mut color_copy = colors.clone();
     color_copy.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
     let pixels = if num_colors > color_copy.len() {
@@ -92,8 +94,9 @@ pub fn sort_colors(colors: ColorCounts, num_colors: usize) -> ColorCounts {
 ///
 /// # Example
 /// ```rust,no_run
-/// let colors: image_colors::ColorCounts = image_colors::fetch_colors("path/to/file.jpg", 5);
-/// let sorted_colors = image_colors::sort_colors(colors, 5);
+/// # use std::path::Path;
+/// let _colors = image_colors::fetch_colors(&Path::new("path/to/file.jpg"), 5);
+/// let sorted_colors = image_colors::sort_colors(&_colors, 5);
 /// image_colors::print_colors(sorted_colors, false, " - ", false);
 /// ```
 pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &str, with_rgb: bool) {
@@ -121,7 +124,42 @@ pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &str,
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use std;
+
+    fn set_crate_dir() {
+        let current = std::env::current_exe().unwrap();
+        let deps = current.parent().unwrap();
+        let debug = deps.parent().unwrap();
+        let target = debug.parent().unwrap();
+        let base = target.parent().unwrap();
+        assert!(std::env::set_current_dir(base).is_ok());
+    }
+
     #[test]
-    fn it_works() {
+    fn fetch_tests_dir() {
+        set_crate_dir();
+        assert!(std::env::current_dir().unwrap().join("tests").is_dir());
+    }
+
+    #[test]
+    fn fetch_test_image() {
+        set_crate_dir();
+        assert!(std::env::current_dir().unwrap().join("tests").join("diamond.png").is_file())
+    }
+
+    #[test]
+    fn basic_sort_colors() {
+        set_crate_dir();
+        let colors = fetch_colors(&Path::new(std::env::current_dir().unwrap()
+                                                           .join("tests").join("diamond.png").as_path()), 10);
+        let sorted_colors = sort_colors(&colors, 5);
+        assert_eq!(sorted_colors.len(), 5);
+        let pixel_colors = sorted_colors.get(0).unwrap().0.clone();
+        let pixel_count = sorted_colors.get(0).unwrap().1.clone();
+        assert_eq!(pixel_colors.r, 40);
+        assert_eq!(pixel_colors.g, 44);
+        assert_eq!(pixel_colors.b, 52);
+        assert_eq!(pixel_count, 805174);
     }
 }

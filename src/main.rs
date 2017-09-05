@@ -1,4 +1,4 @@
-
+use std::path::Path;
 mod lib;
 
 #[macro_use]
@@ -51,7 +51,7 @@ fn main() {
         return;
     }
 
-    let mut pixels = lib::fetch_colors(&args.arg_path, args.flag_depth);
-    pixels = lib::sort_colors(pixels, args.arg_num_colors);
+    let mut pixels = lib::fetch_colors(&Path::new(&args.arg_path), args.flag_depth);
+    pixels = lib::sort_colors(&pixels, args.arg_num_colors);
     lib::print_colors(pixels, args.flag_colors, &args.flag_delimiter, args.flag_rgb);
 }
