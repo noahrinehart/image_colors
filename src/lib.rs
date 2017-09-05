@@ -38,7 +38,7 @@ impl fmt::UpperHex for PixelColor {
 ///
 /// # Example
 /// ```
-/// use lib::fetch_colors
+/// use lib::fetch_colors;
 /// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
 /// ```
 pub fn fetch_colors(filename: &String, depth: usize) -> ColorCounts {
