@@ -53,5 +53,5 @@ fn main() {
 
     let mut pixels = lib::fetch_colors(&args.arg_path, args.flag_depth);
     pixels = lib::sort_colors(pixels, args.arg_num_colors);
-    lib::print_colors(pixels, args.flag_colors, args.flag_delimiter, args.flag_rgb);
+    lib::print_colors(pixels, args.flag_colors, &args.flag_delimiter, args.flag_rgb);
 }

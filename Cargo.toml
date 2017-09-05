@@ -17,6 +17,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "image_colors"
 path = "src/main.rs"
+doc = false
 
 [dependencies]
 image = "0.15.0"

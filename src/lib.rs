@@ -1,4 +1,3 @@
-
 use std::path::Path;
 use std::collections::HashMap;
 use std::iter::FromIterator;
@@ -8,8 +7,10 @@ extern crate image;
 extern crate ansi_term;
 use self::ansi_term::Color as AnsiColor;
 
+/// Type that associates a PixelColor to how many pixels in image
 type ColorCounts = Vec<(PixelColor, usize)>;
 
+/// A single color within an image, stored in rgb
 #[derive(Hash,Eq,PartialEq,Debug,Clone)]
 pub struct PixelColor {
    r: u8,
@@ -17,6 +18,7 @@ pub struct PixelColor {
    b: u8,
 }
 
+/// Provides hex output for PixelColor
 impl fmt::UpperHex for PixelColor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut ret = 0;
@@ -27,6 +29,18 @@ impl fmt::UpperHex for PixelColor {
     }
 }
 
+/// Returns a ColorCounts pixel to count vector
+///
+/// # Arguments
+///
+/// * 'filename' - A String reference to the filename of the picture
+/// * 'depth' - How many pixels from the image to ingest
+///
+/// # Example
+/// ```
+/// use lib::fetch_colors
+/// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
+/// ```
 pub fn fetch_colors(filename: &String, depth: usize) -> ColorCounts {
 
     let img = image::open(&Path::new(filename)).unwrap();
@@ -44,23 +58,54 @@ pub fn fetch_colors(filename: &String, depth: usize) -> ColorCounts {
     Vec::from_iter(pixel_map)
 }
 
-pub fn sort_colors(mut colors: ColorCounts, num_colors: usize) -> ColorCounts {
-    colors.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
-    let pixels = if num_colors > colors.len() {
-        colors.to_vec()
+/// Sorts a ColorCounts type by number of pixels
+///
+/// # Arguments
+///
+/// * 'colors' - A ColorCounts vector of colors to pixel count
+/// * 'num_colors' - How many colors to return
+///
+/// # Example
+/// ```
+/// use lib::*;
+/// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
+/// let sorted_colors = sort_colors(colors, 5);
+/// ```
+pub fn sort_colors(colors: ColorCounts, num_colors: usize) -> ColorCounts {
+    let mut color_copy = colors.clone();
+    color_copy.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
+    let pixels = if num_colors > color_copy.len() {
+        color_copy.to_vec()
     } else {
-        colors[0..num_colors].to_vec()
+        color_copy[0..num_colors].to_vec()
     };
     pixels
 }
 
-pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, mut delimiter: String, with_rgb: bool) {
-    if delimiter.is_empty() {
-        delimiter = " has a pixel count of: ".to_string();
+/// Prints colors from ColorCounts vector, options to use color, a delimiter, or print in rgb, not
+/// hex.
+///
+/// # Arguments
+///
+/// * 'colors' - A ColorCounts vector of colors to pixel count
+/// * 'with_ansi_color' - Print with color?
+/// * 'delimiter' - Delimiter to be used when printing ColorCounts
+/// * 'with_rgb' - Print in rgb
+///
+/// # Example
+/// ```
+/// use lib::*;
+/// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
+/// let sorted_colors = sort_colors(colors, 5);
+/// print_colors(sorted_colors, false, " - ".to_string(), false);
+/// ```
+pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &String, with_rgb: bool) {
+    let mut delimiter_copy = " has a pixel count of: ".to_string();
+    if !delimiter.is_empty() {
+        delimiter_copy = " has a pixel count of: ".to_string();
     }
 
     for (color, count) in colors {
-
         let display_color = if with_rgb {
             format!("r:{} g:{} b:{}", color.r, color.g, color.b)
         } else {
@@ -69,9 +114,9 @@ pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, mut delimiter: S
 
         if with_ansi_color {
             let ansi_color = AnsiColor::RGB(color.r, color.g, color.b);
-            println!("{} {}{}{}", ansi_color.paint("█"), display_color, delimiter, count);
+            println!("{} {}{}{}", ansi_color.paint("█"), display_color, delimiter_copy, count);
         } else {
-            println!("{}{}{}", display_color, delimiter, count);
+            println!("{}{}{}", display_color, delimiter_copy, count);
         }
     }
 }
