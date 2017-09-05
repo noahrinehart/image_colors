@@ -1,6 +1,6 @@
 [package]
 name = "image_colors"
-version = "0.3.2"
+version = "0.4.0"
 authors = ["Noah Rinehart <rinehart.noah@gmail.com>"]
 description = "Get colors from an image. Optionally sort by most common."
 homepage = "https://github.com/noahrinehart/image_colors"
