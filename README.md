@@ -1,4 +1,4 @@
-# image_colors [![Crates.io version shield](https://img.shields.io/crates/v/image_colors.svg)](https://crates.io/crates/image_colors)
+# image_colors [![Crates.io version shield](https://img.shields.io/crates/v/image_colors.svg)](https://crates.io/crates/image_colors) [![Travis-CI build status](https://travis-ci.org/noahrinehart/image_colors.svg?branch=master)](https://travis-ci.org/noahrinehart/image_colors/)
 Get colors from an image. Optionally sort by most common.
 
 --------
