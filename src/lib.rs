@@ -8,7 +8,7 @@ extern crate ansi_term;
 use self::ansi_term::Color as AnsiColor;
 
 /// Type that associates a PixelColor to how many pixels in image
-type ColorCounts = Vec<(PixelColor, usize)>;
+pub type ColorCounts = Vec<(PixelColor, usize)>;
 
 /// A single color within an image, stored in rgb
 #[derive(Hash,Eq,PartialEq,Debug,Clone)]
@@ -37,11 +37,10 @@ impl fmt::UpperHex for PixelColor {
 /// * 'depth' - How many pixels from the image to ingest
 ///
 /// # Example
+/// ```rust,no_run
+/// let colors: image_colors::ColorCounts = image_colors::fetch_colors("path/to/file.jpg", 5);
 /// ```
-/// use lib::fetch_colors;
-/// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
-/// ```
-pub fn fetch_colors(filename: &String, depth: usize) -> ColorCounts {
+pub fn fetch_colors(filename: &str, depth: usize) -> ColorCounts {
 
     let img = image::open(&Path::new(filename)).unwrap();
     let raw_pixels = img.raw_pixels();
@@ -66,10 +65,9 @@ pub fn fetch_colors(filename: &String, depth: usize) -> ColorCounts {
 /// * 'num_colors' - How many colors to return
 ///
 /// # Example
-/// ```
-/// use lib::*;
-/// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
-/// let sorted_colors = sort_colors(colors, 5);
+/// ```rust,no_run
+/// let colors: image_colors::ColorCounts = image_colors::fetch_colors("path/to/file.jpg", 5);
+/// let sorted_colors = image_colors::sort_colors(colors, 5);
 /// ```
 pub fn sort_colors(colors: ColorCounts, num_colors: usize) -> ColorCounts {
     let mut color_copy = colors.clone();
@@ -93,13 +91,12 @@ pub fn sort_colors(colors: ColorCounts, num_colors: usize) -> ColorCounts {
 /// * 'with_rgb' - Print in rgb
 ///
 /// # Example
+/// ```rust,no_run
+/// let colors: image_colors::ColorCounts = image_colors::fetch_colors("path/to/file.jpg", 5);
+/// let sorted_colors = image_colors::sort_colors(colors, 5);
+/// image_colors::print_colors(sorted_colors, false, " - ", false);
 /// ```
-/// use lib::*;
-/// let colors: ColorCounts = fetch_colors("path/to/file.jpg", 5);
-/// let sorted_colors = sort_colors(colors, 5);
-/// print_colors(sorted_colors, false, " - ".to_string(), false);
-/// ```
-pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &String, with_rgb: bool) {
+pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &str, with_rgb: bool) {
     let mut delimiter_copy = " has a pixel count of: ".to_string();
     if !delimiter.is_empty() {
         delimiter_copy = " has a pixel count of: ".to_string();
@@ -121,3 +118,10 @@ pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &Stri
     }
 }
 
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+    }
+}
