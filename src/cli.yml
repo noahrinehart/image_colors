@@ -1,0 +1,35 @@
+name: Image Colors
+version: "0.4.3"
+author: Noah Rinehart <rinehart.noah@gmail.com>
+about: Gets colors from an image. Optionally sort by most common.
+args:
+    - help:
+        short: h
+        help: Shows help screen
+    - version:
+        short: v
+        help: Displays the version number
+    - delimiter:
+        short: l
+        long: delim
+        takes_value: true
+        value_name: DELIMITER
+        help: Sets output delimiter
+        default_value: " has a pixel count of: "
+    - depth:
+        short: d
+        takes_value: true
+        value_name: DEPTH
+        help: Sets depth of search
+    - rgb:
+        short: r
+        help: Displays color in rgb instead of hex
+    - colors:
+        short: c
+        help: Show colors in terminal
+    - PATH:
+        help: Path to the image
+        index: 1
+    - NUM_COLORS:
+        help: Number of colors to return
+        index: 2
