@@ -29,7 +29,7 @@ fn main() {
         }
     };
 
-    let delimiter = matches.value_of("delimiter").unwrap_or(" - ");
+    let delimiter = matches.value_of("delimiter").unwrap();
     let depth = matches.value_of("depth").unwrap_or("1").parse::<usize>().unwrap();
     let rgb = matches.is_present("rgb");
     let colors = matches.is_present("colors");
