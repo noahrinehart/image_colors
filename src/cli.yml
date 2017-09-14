@@ -3,12 +3,6 @@ version: "0.4.3"
 author: Noah Rinehart <rinehart.noah@gmail.com>
 about: Gets colors from an image. Optionally sort by most common.
 args:
-    - help:
-        short: h
-        help: Shows help screen
-    - version:
-        short: v
-        help: Displays the version number
     - delimiter:
         short: l
         long: delim

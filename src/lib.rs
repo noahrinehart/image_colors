@@ -100,11 +100,6 @@ pub fn sort_colors(colors: &ColorCounts, num_colors: usize) -> ColorCounts {
 /// image_colors::print_colors(sorted_colors, false, " - ", false);
 /// ```
 pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &str, with_rgb: bool) {
-    let mut delimiter_copy = " has a pixel count of: ".to_string();
-    if !delimiter.is_empty() {
-        delimiter_copy = " has a pixel count of: ".to_string();
-    }
-
     for (color, count) in colors {
         let display_color = if with_rgb {
             format!("r:{} g:{} b:{}", color.r, color.g, color.b)
@@ -114,9 +109,9 @@ pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &str,
 
         if with_ansi_color {
             let ansi_color = AnsiColor::RGB(color.r, color.g, color.b);
-            println!("{} {}{}{}", ansi_color.paint("█"), display_color, delimiter_copy, count);
+            println!("{} {}{}{}", ansi_color.paint("█"), display_color, delimiter, count);
         } else {
-            println!("{}{}{}", display_color, delimiter_copy, count);
+            println!("{}{}{}", display_color, delimiter, count);
         }
     }
 }
