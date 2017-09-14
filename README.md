@@ -4,21 +4,26 @@ Get colors from an image. Optionally sort by most common.
 --------
 ### Usage
 ```bash
-Image Colors
-Get colors from an image. Optionally sort by most common.
+Image Colors 0.4.3
+Noah Rinehart <rinehart.noah@gmail.com>
+Gets colors from an image. Optionally sort by most common.
 
-Usage:
-    ./image_colors [options] <path> <num-colors>
-    ./image_colors (-h | --help)
-    ./image_colors --version
+USAGE:
+    image_colors [FLAGS] [OPTIONS] [ARGS]
 
-Options:
-    -h, --help              Show this screen.
-    --version               Show version.
-    -c, --colors            Show colors.
-    -l, --delimiter DELIM   Delimiter between color and count [defaults: ' has a pixel count of: '].
-    -d, --depth DEPTH       Set depth of search (how many pixels iterated by) [default: 1].
-    -r, --rgb               Display rgb instead of hex.
+FLAGS:
+    -c               Show colors in terminal
+    -h, --help       Prints help information
+    -r               Displays color in rgb instead of hex
+    -V, --version    Prints version information
+
+OPTIONS:
+    -l, --delim <DELIMITER>    Sets output delimiter [default:  has a pixel count of: ]
+    -d <DEPTH>                 Sets depth of search
+
+ARGS:
+    <PATH>          Path to the image
+    <NUM_COLORS>    Number of colors to return
 ```
 
 ### Example
