@@ -43,7 +43,7 @@ impl fmt::UpperHex for PixelColor {
 /// ```
 pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
 
-    let img = image::open(filepath).unwrap();
+    let img = image::open(filepath).expect("File couldn't be opened!");
     let raw_pixels = img.raw_pixels();
     let raw_pixels_size = raw_pixels.len();
     let mut pixel_map = HashMap::new();
