@@ -3,19 +3,19 @@ use std::collections::HashMap;
 use std::iter::FromIterator;
 use std::fmt;
 
-extern crate image;
 extern crate ansi_term;
+extern crate image;
 use self::ansi_term::Color as AnsiColor;
 
 /// Type that associates a PixelColor to how many pixels in image
 pub type ColorCounts = Vec<(PixelColor, usize)>;
 
 /// A single color within an image, stored in rgb
-#[derive(Hash,Eq,PartialEq,Debug,Clone)]
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct PixelColor {
-   r: u8,
-   g: u8,
-   b: u8,
+    r: u8,
+    g: u8,
+    b: u8,
 }
 
 /// Provides hex output for PixelColor
@@ -42,7 +42,6 @@ impl fmt::UpperHex for PixelColor {
 /// let _colors = image_colors::fetch_colors(&Path::new("path/to/file.jpg"), 5);
 /// ```
 pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
-
     let img = image::open(filepath).expect("File couldn't be opened!");
     let raw_pixels = img.raw_pixels();
     let raw_pixels_size = raw_pixels.len();
@@ -50,7 +49,11 @@ pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
 
     let mut i = 0;
     while i < raw_pixels_size - 3 {
-        let color = PixelColor { r: raw_pixels[i], g: raw_pixels[i+1], b: raw_pixels[i+2] };
+        let color = PixelColor {
+            r: raw_pixels[i],
+            g: raw_pixels[i + 1],
+            b: raw_pixels[i + 2],
+        };
         *pixel_map.entry(color).or_insert(0) += 1;
         i += depth * 3;
     }
@@ -104,12 +107,18 @@ pub fn print_colors(colors: ColorCounts, with_ansi_color: bool, delimiter: &str,
         let display_color = if with_rgb {
             format!("r:{} g:{} b:{}", color.r, color.g, color.b)
         } else {
-           format!("#{:X}", color)
+            format!("#{:X}", color)
         };
 
         if with_ansi_color {
             let ansi_color = AnsiColor::RGB(color.r, color.g, color.b);
-            println!("{} {}{}{}", ansi_color.paint("█"), display_color, delimiter, count);
+            println!(
+                "{} {}{}{}",
+                ansi_color.paint("█"),
+                display_color,
+                delimiter,
+                count
+            );
         } else {
             println!("{}{}{}", display_color, delimiter, count);
         }
@@ -140,14 +149,28 @@ mod tests {
     #[test]
     fn fetch_test_image() {
         set_crate_dir();
-        assert!(std::env::current_dir().unwrap().join("tests").join("diamond.png").is_file())
+        assert!(
+            std::env::current_dir()
+                .unwrap()
+                .join("tests")
+                .join("diamond.png")
+                .is_file()
+        )
     }
 
     #[test]
     fn basic_sort_colors() {
         set_crate_dir();
-        let colors = fetch_colors(&Path::new(std::env::current_dir().unwrap()
-                                                           .join("tests").join("diamond.png").as_path()), 10);
+        let colors = fetch_colors(
+            &Path::new(
+                std::env::current_dir()
+                    .unwrap()
+                    .join("tests")
+                    .join("diamond.png")
+                    .as_path(),
+            ),
+            10,
+        );
         let sorted_colors = sort_colors(&colors, 5);
         assert_eq!(sorted_colors.len(), 5);
         let pixel_colors = sorted_colors.get(0).unwrap().0.clone();
