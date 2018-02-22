@@ -5,7 +5,9 @@ use std::fmt;
 
 extern crate ansi_term;
 extern crate image;
+
 use self::ansi_term::Color as AnsiColor;
+use self::image::DynamicImage;
 
 /// Type that associates a PixelColor to how many pixels in image
 pub type ColorCounts = Vec<(PixelColor, usize)>;
@@ -29,7 +31,7 @@ impl fmt::UpperHex for PixelColor {
     }
 }
 
-/// Returns a ColorCounts pixel to count vector
+/// Returns a ColorCounts pixel to count vector for a file
 ///
 /// # Arguments
 ///
@@ -42,7 +44,28 @@ impl fmt::UpperHex for PixelColor {
 /// let _colors = image_colors::fetch_colors(&Path::new("path/to/file.jpg"), 5);
 /// ```
 pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
-    let img = image::open(filepath).expect("File couldn't be opened!");
+     let img = image::open(filepath).expect("File couldn't be opened!");
+     fetch_colors_img(img, depth)
+}
+/// Returns a ColorCounts pixel to count vector for a image
+///
+/// # Arguments
+///
+/// * 'image' - A Image reference to the instance of the picture
+/// * 'depth' - How many pixels from the image to ingest
+///
+/// # Example
+/// ```rust,no_run
+/// # extern crate image;
+/// # extern crate image_colors;
+/// # use std::path::Path;
+/// fn main() {
+///     let filepath = &Path::new("path/to/file.jpg");
+///     let img = image::open(filepath).expect("File couldn't be opened!");
+///     let _colors = image_colors::fetch_colors_img(img, 5);
+/// }
+/// ```
+pub fn fetch_colors_img(img: DynamicImage, depth: usize) -> ColorCounts {
     let raw_pixels = img.raw_pixels();
     let raw_pixels_size = raw_pixels.len();
     let mut pixel_map = HashMap::new();
