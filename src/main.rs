@@ -44,7 +44,7 @@ fn main() {
         .parse::<usize>()
         .expect("Error parsing args, num_colors not found!");
 
-    let mut pixels = lib::fetch_colors(&Path::new(path), depth);
+    let mut pixels = lib::fetch_colors(Path::new(path), depth);
     pixels = lib::sort_colors(&pixels, num_colors);
 
     lib::print_colors(pixels, colors, delimiter, rgb);

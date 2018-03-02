@@ -9,7 +9,7 @@ extern crate image;
 use self::ansi_term::Color as AnsiColor;
 use self::image::DynamicImage;
 
-/// Type that associates a PixelColor to how many pixels in image
+/// Type that associates a `PixelColor` to how many pixels in image
 pub type ColorCounts = Vec<(PixelColor, usize)>;
 
 /// A single color within an image, stored in rgb
@@ -20,18 +20,18 @@ pub struct PixelColor {
     b: u8,
 }
 
-/// Provides hex output for PixelColor
+/// Provides hex output for `PixelColor`
 impl fmt::UpperHex for PixelColor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut ret = 0;
-        ret = ret << 8 | self.r as u32;
-        ret = ret << 8 | self.g as u32;
-        ret = ret << 8 | self.b as u32;
+        ret = ret << 8 | u32::from(self.r);
+        ret = ret << 8 | u32::from(self.g);
+        ret = ret << 8 | u32::from(self.b);
         write!(f, "{:X}", ret)
     }
 }
 
-/// Returns a ColorCounts pixel to count vector for a file
+/// Returns a `ColorCounts` pixel to count vector for a file
 ///
 /// # Arguments
 ///
@@ -45,9 +45,9 @@ impl fmt::UpperHex for PixelColor {
 /// ```
 pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
      let img = image::open(filepath).expect("File couldn't be opened!");
-     fetch_colors_img(img, depth)
+     fetch_colors_img(&img, depth)
 }
-/// Returns a ColorCounts pixel to count vector for a image
+/// Returns a `ColorCounts` pixel to count vector for a image
 ///
 /// # Arguments
 ///
@@ -62,10 +62,10 @@ pub fn fetch_colors(filepath: &Path, depth: usize) -> ColorCounts {
 /// fn main() {
 ///     let filepath = &Path::new("path/to/file.jpg");
 ///     let img = image::open(filepath).expect("File couldn't be opened!");
-///     let _colors = image_colors::fetch_colors_img(img, 5);
+///     let _colors = image_colors::fetch_colors_img(&img, 5);
 /// }
 /// ```
-pub fn fetch_colors_img(img: DynamicImage, depth: usize) -> ColorCounts {
+pub fn fetch_colors_img(img: &DynamicImage, depth: usize) -> ColorCounts {
     let raw_pixels = img.raw_pixels();
     let raw_pixels_size = raw_pixels.len();
     let mut pixel_map = HashMap::new();
@@ -84,12 +84,12 @@ pub fn fetch_colors_img(img: DynamicImage, depth: usize) -> ColorCounts {
     Vec::from_iter(pixel_map)
 }
 
-/// Sorts a ColorCounts type by number of pixels
+/// Sorts a `ColorCounts` type by number of pixels
 ///
 /// # Arguments
 ///
-/// * 'colors' - A ColorCounts vector of colors to pixel count
-/// * 'num_colors' - How many colors to return
+/// * 'colors' - A `ColorCounts` vector of colors to pixel count
+/// * '`num_colors`' - How many colors to return
 ///
 /// # Example
 /// ```rust,no_run
@@ -98,25 +98,24 @@ pub fn fetch_colors_img(img: DynamicImage, depth: usize) -> ColorCounts {
 /// let _sorted_colors = image_colors::sort_colors(&_colors, 5);
 /// ```
 pub fn sort_colors(colors: &ColorCounts, num_colors: usize) -> ColorCounts {
-    let mut color_copy = colors.clone();
+    let mut color_copy = colors.to_owned();
     color_copy.sort_by(|&(_, a), &(_, b)| b.cmp(&a));
-    let pixels = if num_colors > color_copy.len() {
+    if num_colors > color_copy.len() {
         color_copy.to_vec()
     } else {
         color_copy[0..num_colors].to_vec()
-    };
-    pixels
+    }
 }
 
-/// Prints colors from ColorCounts vector, options to use color, a delimiter, or print in rgb, not
+/// Prints colors from `ColorCounts` vector, options to use color, a delimiter, or print in rgb, not
 /// hex.
 ///
 /// # Arguments
 ///
-/// * 'colors' - A ColorCounts vector of colors to pixel count
-/// * 'with_ansi_color' - Print with color?
-/// * 'delimiter' - Delimiter to be used when printing ColorCounts
-/// * 'with_rgb' - Print in rgb
+/// * 'colors' - A `ColorCounts` vector of colors to pixel count
+/// * '`with_ansi_color`' - Print with color?
+/// * 'delimiter' - Delimiter to be used when printing `ColorCounts`
+/// * '`with_rgb`' - Print in rgb
 ///
 /// # Example
 /// ```rust,no_run
